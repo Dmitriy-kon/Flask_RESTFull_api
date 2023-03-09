@@ -1,9 +1,7 @@
 from flask import request
 from sqlalchemy.orm import Query
 
-from marshmallow import ValidationError
-
-from core.models.model import db, Movie, Genre, Director, MovieSchema, GenreSchema, DirectorSchema
+from app.models.model import db, Movie, Genre, Director, MovieSchema
 
 movies_schema = MovieSchema(many=True)
 movie_schema = MovieSchema()
@@ -33,22 +31,30 @@ class MoviesDao:
         if director_id and genre_id:
             movies = self.__get_query() \
                 .filter(Movie.director_id == director_id, Movie.genre_id == genre_id).all()
-            return movies_schema.dump(movies)
+            if not movies:
+                return "id not found", 404
+            return movies_schema.dump(movies), 200
 
         elif director_id:
             movies = self.__get_query() \
                 .filter(Movie.director_id == director_id).all()
-            return movies_schema.dump(movies)
+            if not movies:
+                return "id not found", 404
+            return movies_schema.dump(movies), 200
 
         elif director_id:
             movies = self.__get_query() \
                 .filter(Movie.genre_id == genre_id).all()
-            return movies_schema.dump(movies)
+            if not movies:
+                return "id not found", 404
+            return movies_schema.dump(movies), 200
 
         else:
             movies = self.__get_query().all()
-            return movies_schema.dump(movies)
+            return movies_schema.dump(movies), 200
 
-    def get_one(self, id: int):
-        movie = self.__get_query().filter(Movie.id == id).one()
-        return movie_schema.dump(movie)
+    def get_one(self, uid: int):
+        movie = self.__get_query().filter(Movie.id == uid).one()
+        if not movie:
+            return "id not found", 404
+        return movie_schema.dump(movie), 200

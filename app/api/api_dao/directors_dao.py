@@ -1,9 +1,8 @@
 from flask import request
-from sqlalchemy.orm import Query
 
 from marshmallow import ValidationError
 
-from core.models.model import db, Movie, Genre, Director, MovieSchema, GenreSchema, DirectorSchema
+from app.models.model import db, Director, DirectorSchema
 
 directors_schema = DirectorSchema(many=True)
 director_schema = DirectorSchema()

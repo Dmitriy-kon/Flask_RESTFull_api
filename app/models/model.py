@@ -1,7 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy
+from app.setup_bd import db
+
 from marshmallow import fields, Schema
 
-db = SQLAlchemy()
+
 
 
 class Movie(db.Model):
