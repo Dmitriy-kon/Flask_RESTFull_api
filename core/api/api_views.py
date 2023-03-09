@@ -4,7 +4,7 @@ from flask_restx.representations import output_json
 
 from core.api.api_dao.movies_dao import MoviesDao
 from core.api.api_dao.directors_dao import DirectorDao
-
+from core.api.api_dao.genre_dao import GenreDao
 
 from core.models.model import db, Movie, Genre, Director, MovieSchema, GenreSchema, DirectorSchema
 
@@ -15,6 +15,7 @@ api.representations = {'application/json; charset=utf-8': output_json}
 
 movies_ns = api.namespace('movies')
 directors_ns = api.namespace('directors')
+genres_ns = api.namespace('genres')
 
 
 @movies_ns.route('/')
@@ -23,7 +24,7 @@ class MoviesView(Resource):
 
     def get(self):
         movies = self.moviesdao.get_all()
-        return movies, 200
+        return movies
 
 
 @movies_ns.route('/<int:uid>')
@@ -32,7 +33,7 @@ class MovieView(Resource):
 
     def get(self, uid):
         movie = self.moviesdao.get_one(uid)
-        return movie, 200
+        return movie
 
 
 @directors_ns.route('/')
@@ -60,3 +61,28 @@ class DirectorView(Resource):
 
     def delete(self, uid):
         return self.directordao.delete(uid)
+
+
+@genres_ns.route('/')
+class GenresView(Resource):
+    genre_dao = GenreDao()
+
+    def get(self):
+        return self.genre_dao.get_all()
+
+    def post(self):
+        return self.genre_dao.post()
+
+
+@genres_ns.route('/<int:uid>')
+class GenreView(Resource):
+    genre_dao = GenreDao()
+
+    def get(self, uid):
+        return self.genre_dao.get_one(uid)
+
+    def put(self, uid):
+        return self.genre_dao.put(uid)
+
+    def delete(self, uid):
+        return self.genre_dao.delete(uid)
