@@ -38,6 +38,15 @@ class MovieSchema(Schema):
     rating = fields.Float()
     genre_id = fields.Int()
     director_id = fields.Int()
+    genre = fields.Str()
+    director = fields.Str()
 
-    genre = db.relationship("Genre", backref="movies")
-    director = db.relationship("Director", backref="movies")
+
+class GenreSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
+
+
+class DirectorSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
