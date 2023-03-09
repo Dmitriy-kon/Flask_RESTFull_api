@@ -1,0 +1,13 @@
+.vscode/
+.idea/
+venv/
+.flake8
+.djlintrc
+test.py
+data.txt
+__pycache__
+css/
+**/*/__pycache__
+.env/
+SQL/
+utils/
