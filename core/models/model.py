@@ -15,8 +15,8 @@ class Movie(db.Model):
     genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))
     director_id = db.Column(db.Integer, db.ForeignKey("director.id"))
 
-    genre = db.relationship("Genre", backref="movies", foreign_keys=[genre_id])
-    director = db.relationship("Director", backref="movies")
+    genre = db.relationship("Genre")
+    director = db.relationship("Director", back_populates='movies')
 
 
 class Genre(db.Model):
@@ -29,6 +29,8 @@ class Director(db.Model):
     __tablename__ = 'director'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+
+    movies = db.relationship("Movie")
 
 
 class MovieSchema(Schema):
