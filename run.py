@@ -6,7 +6,8 @@ from app.setup_bd import db
 from app.api.api_views import api_blueprint
 
 from app.views.movies import movies_ns
-from app.api.api_views import directors_ns, genres_ns
+from app.views.directors import directors_ns
+from app.views.genres import genres_ns
 
 from app.config import Config
 
