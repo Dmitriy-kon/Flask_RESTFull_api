@@ -1,7 +1,12 @@
-from app.api.api_dao.directors_dao import DirectorDao
 from flask_restx import Namespace, Resource
 
+from app.dao import DirectorDao
+from app.dao import DirectorSchema
+
 directors_ns = Namespace('directors')
+
+directors_schema = DirectorSchema(many=True)
+director_schema = DirectorSchema()
 
 
 @directors_ns.route('/')

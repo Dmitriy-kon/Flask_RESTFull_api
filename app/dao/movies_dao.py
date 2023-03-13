@@ -1,10 +1,7 @@
 from flask import request
 from sqlalchemy.orm import Query
 
-from app.models.model import db, Movie, Genre, Director, MovieSchema
-
-movies_schema = MovieSchema(many=True)
-movie_schema = MovieSchema()
+from app.dao.models import db, Movie, Genre, Director
 
 
 class MoviesDao:

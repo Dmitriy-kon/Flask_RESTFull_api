@@ -3,8 +3,6 @@ from app.setup_bd import db
 from marshmallow import fields, Schema
 
 
-
-
 class Movie(db.Model):
     __tablename__ = 'movie'
     id = db.Column(db.Integer, primary_key=True)
@@ -20,20 +18,6 @@ class Movie(db.Model):
     director = db.relationship("Director", back_populates='movies')
 
 
-class Genre(db.Model):
-    __tablename__ = 'genre'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-
-
-class Director(db.Model):
-    __tablename__ = 'director'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-
-    movies = db.relationship("Movie")
-
-
 class MovieSchema(Schema):
     id = fields.Int()
     title = fields.Str()
@@ -45,13 +29,3 @@ class MovieSchema(Schema):
     director_id = fields.Int()
     genre = fields.Str()
     director = fields.Str()
-
-
-class GenreSchema(Schema):
-    id = fields.Int()
-    name = fields.Str()
-
-
-class DirectorSchema(Schema):
-    id = fields.Int()
-    name = fields.Str()

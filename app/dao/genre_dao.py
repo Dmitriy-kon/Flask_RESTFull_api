@@ -2,10 +2,7 @@ from flask import request
 
 from marshmallow import ValidationError
 
-from app.models.model import db, Genre, GenreSchema
-
-genres_schema = GenreSchema(many=True)
-genre_schema = GenreSchema()
+from app.dao.models import db, Genre
 
 
 class GenreDao:

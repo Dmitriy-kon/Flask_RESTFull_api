@@ -1,7 +1,12 @@
-from app.api.api_dao.genre_dao import GenreDao
 from flask_restx import Namespace, Resource
 
+from app.dao import GenreDao
+from app.dao import GenreSchema
+
 genres_ns = Namespace('genres')
+
+genres_schema = GenreSchema(many=True)
+genre_schema = GenreSchema()
 
 
 @genres_ns.route('/')

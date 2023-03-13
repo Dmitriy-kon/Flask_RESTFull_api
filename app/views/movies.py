@@ -1,7 +1,12 @@
-from app.api.api_dao.movies_dao import MoviesDao
 from flask_restx import Namespace, Resource
 
+from app.dao import MoviesDao
+from app.dao import MovieSchema
+
 movies_ns = Namespace('movies')
+
+movies_schema = MovieSchema(many=True)
+movie_schema = MovieSchema()
 
 
 @movies_ns.route('/')

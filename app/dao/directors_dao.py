@@ -2,10 +2,7 @@ from flask import request
 
 from marshmallow import ValidationError
 
-from app.models.model import db, Director, DirectorSchema
-
-directors_schema = DirectorSchema(many=True)
-director_schema = DirectorSchema()
+from app.dao.models import db, Director
 
 
 class DirectorDao:
