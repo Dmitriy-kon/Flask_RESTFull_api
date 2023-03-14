@@ -1,61 +1,37 @@
 from flask import request
 
 from marshmallow import ValidationError
+from sqlalchemy.orm import Session
 
-from app.dao.models import db, Genre
+from app.dao.models.genre import Genre
 
 
 class GenreDao:
 
-    def get_all(self):
-        genres = db.session.query(Genre).all()
-        return genres_schema.dump(genres), 200
-
-    def post(self):
-        try:
-            data_load = genre_schema.load(request.json)
-            genre = Genre(**data_load)
-        except ValidationError as _e:
-            return f"{_e}", 404
-        else:
-            with db.session.begin():
-                db.session.add(genre)
-            return 'Genre added', 201
+    def __init__(self, session: Session):
+        self.session = session
 
     def get_one(self, uid):
-        genre = db.session.query(Genre).get(uid)
-        db.session.close()
+        genre = self.session.query(Genre).get(uid)
+        return genre
 
-        if not genre:
-            return "genre not found", 404
+    def get_all(self):
+        genres = self.session.query(Genre).all()
+        return genres
 
-        return genre_schema.dump(genre), 200
+    def post(self, data_load: dict) -> Genre:
+        genre = Genre(**data_load)
+        self.session.add(genre)
+        self.session.commit()
+        return genre
 
-    def put(self, uid):
-        try:
-            data_load = genre_schema.load(request.json)
-            genre = db.session.query(Genre).get(uid)
+    def put(self, uid: int, data: dict) -> None:
+        self.session.query(Genre).filter(Genre.id == uid).update(data)
+        self.session.commit()
 
-            if not genre:
-                return "genre not found", 404
+    def delete(self, data: Genre) -> None:
+        self.session.delete(data)
+        self.session.commit()
 
-        except ValidationError as _e:
-            return f"{_e}", 400
-
-        else:
-            genre.name = data_load.get("name")
-            db.session.commit()
-            db.session.close()
-            return "PUT completely", 201
-
-    def delete(self, uid):
-        genre = db.session.query(Genre).get(uid)
-
-        if not genre:
-            return "genre not found", 404
-
-        db.session.delete(genre)
-        db.session.commit()
-        db.session.close()
-
-        return f"Genre with id: {uid} successfully deleted", 201
+    # def update_partial(self, data: dict) -> None:
+    #     pass
