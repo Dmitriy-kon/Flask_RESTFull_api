@@ -5,7 +5,7 @@ from flask_restx.representations import output_json
 from app.setup_bd import db
 
 # from app.views.movies import movies_ns
-# from app.views.directors import directors_ns
+from app.views.directors import directors_ns
 from app.views.genres import genres_ns
 
 from app.config import Config
@@ -26,7 +26,7 @@ def configure_app(application: Flask) -> None:
     api.representations = {'application/json; charset=utf-8': output_json}
 
     # api.add_namespace(movies_ns)
-    # api.add_namespace(directors_ns)
+    api.add_namespace(directors_ns)
     api.add_namespace(genres_ns)
 
 

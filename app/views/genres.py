@@ -86,19 +86,3 @@ class GenreView(Resource):
 
         return genre_service.delete(genre), 204
 
-    # @genres_ns.doc(description='patch genre by id', body=genre_model)
-    # @genres_ns.response(200, "Success")
-    # @genres_ns.response(400, "Validation error")
-    # @genres_ns.response(404, "Not found")
-    # def patch(self, uid):
-    #     try:
-    #         data = genre_schema.load(request.json)
-    #         genre = genre_service.get_one(uid)
-    #
-    #         if not genre:
-    #             return f"genre with id {uid} not found", 404
-    #
-    #     except ValidationError as e_:
-    #         return f"{e_}", 400
-    #     else:
-    #         return genre_service.update_partial(data), 200

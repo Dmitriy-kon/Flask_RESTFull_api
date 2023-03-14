@@ -8,8 +8,6 @@ class Director(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
 
-    movies = db.relationship("Movie")
-
 
 class DirectorSchema(Schema):
     id = fields.Int()

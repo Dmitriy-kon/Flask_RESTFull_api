@@ -1,69 +1,36 @@
+from typing import Type
+
 from flask import request
 
 from marshmallow import ValidationError
 from sqlalchemy.orm import Session
 
-from app.dao.models import Director
+from app.dao.models.directors import Director
 
 
 class DirectorDao:
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session) -> None:
         self.session = session
 
-    def get_all(self):
-        directors = self.session. \
-            query(Director.id,
-                  Director.name).all()
-        return directors_schema.dump(directors), 200
-
-    def get_one(self, uid):
-        director = self.session. \
-            query(Director).get(uid)
-        self.session.close()
-
-        if not director:
-            return "Director, not found", 404
-
-        return director_schema.dump(director), 200
-
-    def post(self):
-        try:
-            load_data = request.json
-            director = Director(**director_schema.load(load_data))
-
-        except ValidationError as _e:
-            return f'{_e}', 400
-
-        else:
-            with self.session.begin():
-                self.session.add(director)
-            return '', 201
-
-    def put(self, uid):
-        try:
-            load_data = director_schema.load(request.json)
-            director = self.session.query(Director).get(uid)
-
-            if not director:
-                return f'Director with id {uid} not found', 404
-
-        except ValidationError as _e:
-            return f"{_e}", 400
-
-        else:
-            director.name = load_data.get("name")
-            self.session.commit()
-            self.session.close()
-            return 'PUT completely', 201
-
-    def delete(self, uid):
+    def get_one(self, uid: int) -> Director:
         director = self.session.query(Director).get(uid)
+        return director
 
-        if not director:
-            return f'Director with id {uid} not found', 404
+    def get_all(self) -> list[Type[Director]]:
+        directors = self.session.query(Director).all()
+        return directors
 
-        self.session.delete(director)
+    def post(self, data_load: dict) -> Director:
+        director = Director(**data_load)
+        self.session.add(director)
         self.session.commit()
-        self.session.close()
-        return f"Director with id: {uid} successfully deleted", 201
+        return director
+
+    def put(self, uid: int, data: dict) -> None:
+        self.session.query(Director).filter(Director.id == uid).update(data)
+        self.session.commit()
+
+    def delete(self, data: Director) -> None:
+        self.session.delete(data)
+        self.session.commit()

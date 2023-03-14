@@ -1,6 +1,5 @@
-from flask import request
+from typing import Type
 
-from marshmallow import ValidationError
 from sqlalchemy.orm import Session
 
 from app.dao.models.genre import Genre
@@ -8,14 +7,14 @@ from app.dao.models.genre import Genre
 
 class GenreDao:
 
-    def __init__(self, session: Session):
+    def __init__(self, session: Session) -> None:
         self.session = session
 
-    def get_one(self, uid):
+    def get_one(self, uid: int) -> Genre:
         genre = self.session.query(Genre).get(uid)
         return genre
 
-    def get_all(self):
+    def get_all(self) -> list[Type[Genre]]:
         genres = self.session.query(Genre).all()
         return genres
 

@@ -1,3 +1,5 @@
+from typing import Type
+
 from app.dao.genre_dao import GenreDao
 from app.dao.models.genre import Genre
 
@@ -9,7 +11,7 @@ class GenreService:
     def get_one(self, gid: int) -> Genre:
         return self.dao.get_one(gid)
 
-    def get_all(self) -> list[Genre]:
+    def get_all(self) -> list[Type[Genre]]:
         return self.dao.get_all()
 
     def create(self, data: dict) -> Genre:
@@ -20,6 +22,3 @@ class GenreService:
 
     def delete(self, genre: Genre) -> None:
         return self.dao.delete(genre)
-
-    # def update_partial(self, data: dict) -> None:
-    #     print(data)
