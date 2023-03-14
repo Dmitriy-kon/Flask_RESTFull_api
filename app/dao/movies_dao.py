@@ -1,9 +1,9 @@
-from flask import request
-from sqlalchemy.orm import Query, Session
+from typing import Type
 
-from app.dao.models.movie import MovieSchema, Movie
-from app.dao.models.directors import Director
-from app.dao.models.genre import Genre
+from sqlalchemy.orm import Session
+
+from app.dao.models.movie import Movie
+
 
 # CRUD
 class MoviesDao:
@@ -11,57 +11,40 @@ class MoviesDao:
     def __init__(self, session: Session):
         self.session = session
 
-    def __get_query(self) -> Query:
-        movies_query = self.session. \
-            query(Movie.id,
-                  Movie.title,
-                  Movie.description,
-                  Movie.year,
-                  Movie.trailer,
-                  Movie.rating,
-                  Genre.name.label("genre"),
-                  Director.name.label("director")
-                  ).join(Movie.genre).join(Movie.director)
-        self.session.close()
-        return movies_query
-
-    def get_all(self):
-        director_id = request.args.get('director_id', type=int)
-        genre_id = request.args.get('genre_id', type=int)
-
-        if director_id and genre_id:
-            movies = self.__get_query() \
-                .filter(Movie.director_id == director_id, Movie.genre_id == genre_id).all()
-
-            return movies
-
-            # TODO: перенести логику из фильмов дао в сервисы фильмы
-            # if not movies:
-            #     return "id not found", 404
-            # return movies_schema.dump(movies), 200
-
-        # elif director_id:
-        #     movies = self.__get_query() \
-        #         .filter(Movie.director_id == director_id).all()
-        #     if not movies:
-        #         return "id not found", 404
-        #     return movies_schema.dump(movies), 200
-        #
-        # elif director_id:
-        #     movies = self.__get_query() \
-        #         .filter(Movie.genre_id == genre_id).all()
-        #     if not movies:
-        #         return "id not found", 404
-        #     return movies_schema.dump(movies), 200
-
-        else:
-            movies = self.__get_query().all()
-            return movies
-            # return movies_schema.dump(movies), 200
-
-    def get_one(self, uid: int):
-        movie = self.__get_query().filter(Movie.id == uid).one()
+    def get_one(self, uid: int) -> Movie:
+        movie = self.session.query(Movie).get(uid)
         return movie
-        # if not movie:
-        #     return "id not found", 404
-        # return movie_schema.dump(movie), 200
+
+    def get_all(self) -> list[Type[Movie]]:
+        movies = self.session.query(Movie).all()
+        return movies
+
+    def post(self, data_load: dict) -> Movie:
+        movie = Movie(**data_load)
+        self.session.add(movie)
+        self.session.commit()
+        return movie
+
+    def put(self, uid: int, data: dict) -> None:
+        self.session.query(Movie).filter(Movie.id == uid).update(data)
+        self.session.commit()
+
+    def delete(self, data: Movie) -> None:
+        self.session.delete(data)
+        self.session.commit()
+
+    def patch(self, data: dict, uid: int) -> None:
+        self.session.query(Movie).filter(Movie.id == uid).update(data)
+        self.session.commit()
+
+    def filter(self, filters: dict[str, int | str]) -> list[Type[Movie]]:
+        movies = self.session.query(Movie)
+
+        if filters['director_id']:
+            movies = movies.filter(Movie.director_id == filters['director_id'])
+        if filters['genre_id']:
+            movies = movies.filter(Movie.genre_id == filters['genre_id'])
+        if filters['year']:
+            movies = movies.filter(Movie.year == filters['year'])
+
+        return movies.all()

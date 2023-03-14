@@ -1,8 +1,5 @@
 from typing import Type
 
-from flask import request
-
-from marshmallow import ValidationError
 from sqlalchemy.orm import Session
 
 from app.dao.models.directors import Director

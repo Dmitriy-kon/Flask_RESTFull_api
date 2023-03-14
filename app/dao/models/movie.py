@@ -14,9 +14,6 @@ class Movie(db.Model):
     genre_id = db.Column(db.Integer, db.ForeignKey("genre.id"))
     director_id = db.Column(db.Integer, db.ForeignKey("director.id"))
 
-    genre = db.relationship("Genre")
-    director = db.relationship("Director", back_populates='movies')
-
 
 class MovieSchema(Schema):
     id = fields.Int()
@@ -27,5 +24,4 @@ class MovieSchema(Schema):
     rating = fields.Float()
     genre_id = fields.Int()
     director_id = fields.Int()
-    genre = fields.Str()
-    director = fields.Str()
+
